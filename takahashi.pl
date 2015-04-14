@@ -72,6 +72,7 @@ use File::Basename;
 $|++;
 my @slides;
 my @current_slide;
+my @slide_options;
 
 my %layout;
 $layout{scale_a} = 16;
@@ -85,9 +86,12 @@ my $delete_junk = 1;
 my $delete_even_more_junk = 0;
 my $redo_graphs = 1;
 my $gnuplot_path = "/home/kikuchiyo/gnuplot43";
+if (not -e $gnuplot_path) {
+	$gnuplot_path = "gnuplot";
+}
 
 my %modes = (image => 'image', 'gnuplot*' => 'script', gnuplot => 'script', tex => 'line');
-my @extlist = ( '.txt', '.lst', '.dat');
+my @extlist = qw/ .txt .lst .dat .src /;
 my $globalheader = <<'HEADER';
 \documentclass[utf8x]{beamer}
 \makeatletter
@@ -103,6 +107,8 @@ my $globalheader = <<'HEADER';
 %\usetikzlibrary{arrows,snakes,shapes}
 %\usepackage[usenames,dvipsnames,x11names]{xcolor}
 
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{whitetext}{fg=white}
 
 \begin{document}
 
@@ -133,11 +139,21 @@ while (<$infh>) {
 			$type = 'image';
 		} elsif ($type_s =~ /^te?x?/) {
 			$type = 'tex';
+		} elsif ($type_s =~ /^se?t?/) {
+			$type = 'none';
+			my (undef, $opt, @optval) = split /\s+/, $type_s;
+			if ($opt =~ /background/) {
+				$slide_options[@slides]{background} = join " ", @optval;
+			}
+			
 		} else {
 			$type = 'none';
 		}
-			
-		if ($type eq 'image') {
+		
+		if ($type eq 'none') {
+			# do nothing, exit special mode (no terminating .)
+		}	
+		elsif ($type eq 'image') {
 			my $ifn = <$infh>;
 			chomp $ifn;
 			my $scale = <$infh>;
@@ -198,7 +214,7 @@ while (<$infh>) {
 }
 close $infh;
 
-#print Dumper \@slides;
+#print Dumper \@slides, \@slide_options;
 # get output filename from ARGV, change to tex, open file
 
 my ($infn, $path, $ext) = fileparse($infn_orig, @extlist);
@@ -291,7 +307,14 @@ sub latex {
 	}
 	my $counter = 0;
 	my $saved_fontsize;
-	foreach my $slide (@$slides) {
+	
+	foreach my $i (0..$#$slides) {
+		my $slide = $slides->[$i];
+		
+		if (exists $slide_options[$i]{background}) {
+			$latex .= '\setbeamercolor{normal text}{bg=' . $slide_options[$i]{background} . "}\n";
+		}
+		
 		$latex .= '\begin{frame}'."\n";
 		$latex .= '\begin{center}'."\n";
 		
