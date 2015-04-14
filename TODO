@@ -6,6 +6,8 @@ syntax
 - add new .option or .set (single line)
 - e.g .set background black
 
+- custom header
+
 - revise syntax so that instead of .gnuplot 
   a more general .script gnuplot can be used and it can have options?
 
