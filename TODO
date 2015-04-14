@@ -24,6 +24,7 @@ syntax
 implementation
 
 - make it modular, configurable
+- also configurable headers
 - based on Makefile that takes care of most steps
 - command "takahashi new name" would init a new presentation with .src, Makefile, git or hg
 
