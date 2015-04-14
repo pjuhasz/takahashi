@@ -1,0 +1,29 @@
+syntax
+
+- revise syntax so that image is only a single line, like this:
+- .image filename [scale]
+
+- add new .option or .set (single line)
+- e.g .set background black
+
+- revise syntax so that instead of .gnuplot 
+  a more general .script gnuplot can be used and it can have options?
+
+- .include?
+
+- simpler syntax for gradually revealed lines that translate to \uncover
+* foo
+* bar
+* baz
+
+- simpler syntax for tables?
+* foo & bar
+* baz & quux
+
+
+implementation
+
+- make it modular, configurable
+- based on Makefile that takes care of most steps
+- command "takahashi new name" would init a new presentation with .src, Makefile, git or hg
+
