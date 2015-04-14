@@ -11,8 +11,8 @@ osskilogo.pdf
 
 Gnuplot test
 .gnuplot
-set logs
-plot x
+set title "Gnuplot example"
+plot sin(x)
 .
 
 # Comment
