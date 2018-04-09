@@ -188,7 +188,7 @@ while (<$infh>) {
 		my $dollarcnt =()= /\$/sg;
 		$type = 'normal' unless $dollarcnt % 2;
 		$type = 'tex' if /\\begin|\\end/;
-		my $brace_open =()= /\\\[{/sg; my $brace_close =()= /\\\]/sg;
+		my $brace_open =()= /\\\[\{/sg; my $brace_close =()= /\\\]/sg;
 		$type = 'tex' if $brace_open != $brace_close;
 		$brace_open =()= /\{/sg; $brace_close =()= /\}/sg;
 		$type = 'tex' if $brace_open != $brace_close;
